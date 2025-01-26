@@ -1,0 +1,3 @@
+[submodule "pango2"]
+	path = pango2
+	url = https://gitlab.gnome.org/GNOME/pango.git
