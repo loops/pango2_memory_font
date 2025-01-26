@@ -1,5 +1,10 @@
-all: pango2 oldenglish.h script.h
+CFLAGS += $(shell PKG_CONFIG_PATH="$(CURDIR)/out/lib64/pkgconfig" pkg-config --cflags --libs pango2cairo)
+CFLAGS += -Wl,-rpath="$(CURDIR)/out/lib64"
+CFLAGS += -g -O2 -Wall -Wextra
 
+all: pango2 oldenglish.h script.h hello
+
+hello: hello.c
 
 .PHONY: pango2
 pango2: out/bin/pango-list
