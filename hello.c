@@ -32,9 +32,9 @@ int main() {
     cairo_font_options_set_antialias(font_options, CAIRO_ANTIALIAS_SUBPIXEL);
     cairo_set_font_options(ctx, font_options);
 
-    Pango2FontMap *fontmap = pango2_font_map_new();
-    fontmap_load_font(fontmap, script, script_len, "Mandala Script");
-    fontmap_load_font(fontmap, oldenglish, oldenglish_len, "Mandala Old");
+    Pango2FontMap *fontmap = pango2_font_map_new_default();
+    fontmap_load_font(fontmap, script, script_len, "Script");
+    fontmap_load_font(fontmap, oldenglish, oldenglish_len, "Old");
     Pango2Context *pango_ctx = pango2_cairo_create_context(ctx);
     pango2_context_set_font_map(pango_ctx, fontmap);
     Pango2Layout *pango_layout = pango2_layout_new(pango_ctx);
@@ -46,12 +46,19 @@ int main() {
     cairo_set_source_rgb(ctx, 0.0, 0.2, 1.0);
 
     cairo_move_to(ctx, 0, 0);
-    layout_select_font(pango_layout, "Mandala Old 230");
+    layout_select_font(pango_layout, "Old 230");
     pango2_cairo_update_layout(ctx, pango_layout);
     pango2_cairo_show_layout(ctx, pango_layout);
 
     cairo_move_to(ctx, 200, 400);
-    layout_select_font(pango_layout, "Mandala Script 230");
+    layout_select_font(pango_layout, "Script 230");
+    pango2_cairo_update_layout(ctx, pango_layout);
+    pango2_cairo_show_layout(ctx, pango_layout);
+
+    layout_select_font(pango_layout, "Serif 120");
+    const char* markup = "<span foreground='red'><span font='Script' underline='solid'> Red </span><span font='Old'>Text</span></span> is <i><span underline='dotted'>Cool</span></i>!";
+    pango2_layout_set_markup (pango_layout, markup, -1);
+    cairo_move_to(ctx, 100, 800);
     pango2_cairo_update_layout(ctx, pango_layout);
     pango2_cairo_show_layout(ctx, pango_layout);
 
