@@ -22,6 +22,15 @@ void fontmap_load_font(Pango2FontMap *fontmap, unsigned char data[], unsigned in
     pango2_font_map_add_face(fontmap, PANGO2_FONT_FACE(pango2_hbface));
 }
 
+void show_on_baseline(cairo_t *ctx, int x, int baseline, Pango2Layout *pango_layout)
+{
+    pango2_cairo_update_layout(ctx, pango_layout);
+    Pango2Lines *lines = pango2_layout_get_lines(pango_layout);
+    int adj = pango2_lines_get_baseline(lines) / 1024;
+    cairo_move_to(ctx, x, baseline - adj);
+    pango2_cairo_show_layout(ctx, pango_layout);
+}
+
 int main() {
 
     cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 2560, 1440);
@@ -37,28 +46,22 @@ int main() {
     fontmap_load_font(fontmap, oldenglish, oldenglish_len, "Old");
     Pango2Context *pango_ctx = pango2_cairo_create_context(ctx);
     pango2_context_set_font_map(pango_ctx, fontmap);
-    Pango2Layout *pango_layout = pango2_layout_new(pango_ctx);
-
-    pango2_layout_set_text(pango_layout, "Hello, Pango2 1.9!", -1);
 
     cairo_set_source_rgb(ctx, 1.0, 1.0, 1.0);
     cairo_paint(ctx);
     cairo_set_source_rgb(ctx, 0.0, 0.2, 1.0);
 
-    cairo_move_to(ctx, 0, 0);
-    layout_select_font(pango_layout, "Old 230");
-    pango2_cairo_update_layout(ctx, pango_layout);
-    pango2_cairo_show_layout(ctx, pango_layout);
-
-    cairo_move_to(ctx, 200, 400);
-    layout_select_font(pango_layout, "Script 230");
-    pango2_cairo_update_layout(ctx, pango_layout);
-    pango2_cairo_show_layout(ctx, pango_layout);
+    Pango2Layout *pango_layout = pango2_layout_new(pango_ctx);
+    pango2_layout_set_text(pango_layout, "Hello, Pango2 1.9!", -1);
+    layout_select_font(pango_layout, "Old 120");
+    show_on_baseline(ctx, 150, 450, pango_layout);
+    layout_select_font(pango_layout, "Script 100");
+    show_on_baseline(ctx, 1280, 450, pango_layout);
 
     layout_select_font(pango_layout, "Serif 120");
     const char* markup = "<span foreground='red'><span font='Script' underline='solid'> Red </span><span font='Old'>Text</span></span> is <i><span underline='dotted'>Cool</span></i>!";
     pango2_layout_set_markup (pango_layout, markup, -1);
-    cairo_move_to(ctx, 100, 800);
+    cairo_move_to(ctx, 600, 800);
     pango2_cairo_update_layout(ctx, pango_layout);
     pango2_cairo_show_layout(ctx, pango_layout);
 
