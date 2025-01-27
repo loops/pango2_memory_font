@@ -47,7 +47,7 @@ int main() {
     Pango2Context *pango_ctx = pango2_cairo_create_context(ctx);
     pango2_context_set_font_map(pango_ctx, fontmap);
 
-    cairo_set_source_rgb(ctx, 1.0, 1.0, 1.0);
+    cairo_set_source_rgb(ctx, 0.9, 0.9, 0.75);
     cairo_paint(ctx);
     cairo_set_source_rgb(ctx, 0.0, 0.2, 1.0);
 
